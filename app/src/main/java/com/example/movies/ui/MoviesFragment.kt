@@ -61,21 +61,15 @@ class MoviesFragment : Fragment() {
 
         lifecycleScope.launchWhenCreated {
             adapter.loadStateFlow.collectLatest { state ->
-                binding.swipeRefresh.isRefreshing =
-                    state.refresh is LoadState.Loading
-            }
-        }
-
-        binding.swipeRefresh.setOnRefreshListener(adapter::refresh)
-
-        lifecycleScope.launchWhenCreated {
-            adapter.loadStateFlow.collectLatest { state ->
+                binding.swipeRefresh.isRefreshing = state.refresh is LoadState.Loading
                 binding.progress.isVisible = state.refresh is LoadState.Loading
                 if (state.refresh is LoadState.Error) {
                     Toast.makeText(context, R.string.error_loading, Toast.LENGTH_SHORT).show()
                 }
             }
         }
+
+        binding.swipeRefresh.setOnRefreshListener(adapter::refresh)
 
         return binding.root
     }
